@@ -21,3 +21,4 @@
 * PS1
   * Part A - House Hunting
   * Part B - Saving, with a raise
+  * Part C - Finding the right amount to save away
