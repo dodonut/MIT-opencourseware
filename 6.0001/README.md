@@ -22,3 +22,7 @@
   * Part A - House Hunting
   * Part B - Saving, with a raise
   * Part C - Finding the right amount to save away
+* PS2
+  * Hangman Part 1: Three helper functions
+  * Hangman Part 2: The Game
+  * Hangman Part 3: The Game with Hints
