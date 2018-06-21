@@ -4,6 +4,7 @@
 # Time Spent: x:xx
 
 import string
+import random
 from ps4a import get_permutations
 
 ### HELPER CODE ###
@@ -70,7 +71,8 @@ class SubMessage(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
     
     def get_message_text(self):
         '''
@@ -78,7 +80,7 @@ class SubMessage(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -87,7 +89,7 @@ class SubMessage(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        return self.valid_words.copy()
                 
     def build_transpose_dict(self, vowels_permutation):
         '''
@@ -108,8 +110,17 @@ class SubMessage(object):
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
         '''
-        
-        pass #delete this line and replace with your code here
+        permutedlow = vowels_permutation.lower()
+        permutedUpper = permutedlow.upper()
+
+        transpose_dict = {}
+        for i in range(len(permutedlow)):
+            transpose_dict[VOWELS_LOWER[i]] = permutedlow[i]
+            transpose_dict[VOWELS_UPPER[i]] = permutedUpper[i]
+        for i in range(len(CONSONANTS_LOWER)):
+            transpose_dict[CONSONANTS_LOWER[i]] = CONSONANTS_LOWER[i]
+            transpose_dict[CONSONANTS_UPPER[i]] = CONSONANTS_UPPER[i]
+        return transpose_dict
     
     def apply_transpose(self, transpose_dict):
         '''
@@ -118,8 +129,14 @@ class SubMessage(object):
         Returns: an encrypted version of the message text, based 
         on the dictionary
         '''
-        
-        pass #delete this line and replace with your code here
+        new_message = []
+        for c in self.message_text:
+            if c.isalpha():
+                new_message.append(transpose_dict[c])
+            else:
+                new_message.append(c)
+        return ''.join(new_message)
+
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
@@ -132,7 +149,7 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        SubMessage.__init__(self,text)
 
     def decrypt_message(self):
         '''
@@ -152,13 +169,29 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass #delete this line and replace with your code here
+        best_perm = ""
+        num_valid_words_prev = 0
+        num_valid_words = 0
+        all_permutations = get_permutations(VOWELS_LOWER)
+        for perm in all_permutations:
+            transpose_dict = self.build_transpose_dict(perm)
+            decrypt_message = self.apply_transpose(transpose_dict).split()
+            for word in decrypt_message:
+                if is_word(self.valid_words, word):
+                    num_valid_words += 1
+            if num_valid_words > num_valid_words_prev:
+                best_perm = perm
+                num_valid_words_prev = num_valid_words
+            num_valid_words = 0
+        return self.apply_transpose(self.build_transpose_dict(best_perm))
+
+
     
 
 if __name__ == '__main__':
 
     # Example test case
-    message = SubMessage("Hello World!")
+    message = SubMessage("Jhon is going to the market to buy apples.")
     permutation = "eaiuo"
     enc_dict = message.build_transpose_dict(permutation)
     print("Original message:", message.get_message_text(), "Permutation:", permutation)

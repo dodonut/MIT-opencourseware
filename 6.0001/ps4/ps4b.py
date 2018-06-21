@@ -4,6 +4,7 @@
 # Time Spent: x:xx
 
 import string
+import random
 
 ### HELPER CODE ###
 def load_words(file_name):
@@ -105,9 +106,14 @@ class Message(object):
                  another letter (string). 
         '''
         shift_dict = {}
-        alphabet = string.ascii_lowercase
-        for i in range(len(alphabet)):
-            shift_dict[i] = alphabet[(i + shift)%26]
+        alphalow = string.ascii_lowercase
+        alphahigh = string.ascii_uppercase
+        for i in range(len(alphalow)):
+            if type(shift) != int:
+                print(shift)
+            shift_dict[alphalow[i]] = alphalow[(i + shift) % len(alphalow)]
+            shift_dict[alphahigh[i]] = alphahigh[(i + shift) % len(alphahigh)]
+
         return shift_dict
 
     def apply_shift(self, shift):
@@ -123,11 +129,13 @@ class Message(object):
              down the alphabet by the input shift
         '''
         d = self.build_shift_dict(shift)
-        new_message = ""
+        new_message = []
         for c in self.message_text:
             if c.isalpha():
-                new_message += d[c]
-        return new_message
+                new_message.append(d[c])
+            else:
+                new_message.append(c)
+        return ''.join(new_message)
 
 class PlaintextMessage(Message):
     def __init__(self, text, shift):
@@ -217,17 +225,19 @@ class CiphertextMessage(Message):
         Returns: a tuple of the best shift value used to decrypt the message
         and the decrypted message text using that shift value
         '''
-        best_shift = -1
+        best_shift = 0
         num_valid_words_prev = 0
         num_valid_words = 0
-        for i in range(25,-1,-1):
+        for i in range(26):
             decrypted_message = self.apply_shift(i)
-            for word in decrypted_message:
+            words = decrypted_message.split()
+            for word in words:
                 if is_word(self.valid_words,word):
                     num_valid_words += 1
             if num_valid_words > num_valid_words_prev:
                 best_shift = i
                 num_valid_words_prev = num_valid_words
+            num_valid_words = 0
 
         decrypted_message = self.apply_shift(best_shift)
         return (best_shift, decrypted_message)
@@ -244,8 +254,10 @@ if __name__ == '__main__':
 #    print('Expected Output:', (24, 'hello'))
 #    print('Actual Output:', ciphertext.decrypt_message())
 
-    #TODO: WRITE YOUR TEST CASES HERE
-
-    #TODO: best shift value and unencrypted story 
-    
-    pass #delete this line and replace with your code here
+    text = 'Jhon went to the market, but did not find what he was looking for.'
+    plain = PlaintextMessage(text,random.choice(range(1,26)))
+    cifrado = plain.apply_shift(plain.get_shift())
+    print('Cifrado: ', cifrado)
+    cifra = CiphertextMessage(cifrado)
+    decifrado = cifra.decrypt_message()
+    print('Shift:',plain.get_shift(), 'Decifrado:',decifrado)
