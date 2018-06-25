@@ -93,11 +93,21 @@ class Trigger(object):
 
 # PHRASE TRIGGERS
 
-# Problem 2
-# TODO: PhraseTrigger
+class PhraseTrigger(Trigger):
+    def __init__(self, phrase):
+        self.phrase = phrase.lower().split()
+    
+    def is_phrase_in(self, text):
+        for 
 
-# Problem 3
-# TODO: TitleTrigger
+    
+class TitleTrigger(PhraseTrigger):
+    def __init__(self, title):
+        PhraseTrigger.__init__(self, title)
+    
+    def evaluate(self, story):
+        return self.is_phrase_in(story.get_title().lower())
+    
 
 # Problem 4
 # TODO: DescriptionTrigger
@@ -243,4 +253,3 @@ if __name__ == '__main__':
     t = threading.Thread(target=main_thread, args=(root,))
     t.start()
     root.mainloop()
-
