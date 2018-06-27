@@ -212,25 +212,29 @@ def read_trigger_config(filename):
     triggers = []
     for line in lines:
         args = line.split(',')
-        print(args)
-        print(d)
         if args[0] == 'ADD':
             for arg in args[1:]:
                 triggers.append(d[arg])
         elif args[1] == 'TITLE':
             d[args[0]] = TitleTrigger(args[2])
+
         elif args[1] == 'DESCRIPTION':
             d[args[0]] = DescriptionTrigger(args[2])
+
         elif args[1] == 'AFTER':
             d[args[0]] = AfterTrigger(args[2])
+
         elif args[1] == 'BEFORE':
             d[args[0]] = BeforeTrigger(args[2])
+
         elif args[1] == 'NOT':
             d[args[0]] = NotTrigger(d[args[2]])
+
         elif args[1] == 'AND':
-            d[args[0]] == AndTrigger(d[args[2]],d[args[3]])
+            d[args[0]] = AndTrigger(d[args[2]],d[args[3]])
+
         elif args[1] == 'OR':
-            d[args[0]] == OrTrigger(d[args[2]], d[args[3]])
+            d[args[0]] = OrTrigger(d[args[2]], d[args[3]])
 
     return triggers
 

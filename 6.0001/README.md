@@ -37,3 +37,5 @@
   * Part A: Permutations of a string
   * Part B: Cipher Like Caesar
   * Part C: Substitution Cipher
+* PS5
+  * RSS Feed Structure: Google News - Problems 1-11 just implement step-by-step this solution.
