@@ -1,9 +1,9 @@
 # Course taken FREE at OCW.MIT.EDU
 
 ### 6.0001 - INTRODUCTION TO COMPUTER SCIENCE AND PROGRAMMING IN PYTHON
-### 6.0002 - INTRODUCTION TO COMPUTATIONAL THINKING AND DATA SCIENCE
 
-#### This folder contains the assignments and statements for all problem set in this course (two courses actually, but a sequence)
+
+#### This folder contains the assignments and statements for all problem set in this course
 
 #### Intructor(s)
 - Dr. Ana Bell

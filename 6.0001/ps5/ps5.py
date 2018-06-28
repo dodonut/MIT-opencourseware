@@ -91,8 +91,6 @@ class Trigger(object):
         # DO NOT CHANGE THIS!
         raise NotImplementedError
 
-# PHRASE TRIGGERS
-
 class PhraseTrigger(Trigger):
     def __init__(self, phrase):
         self.phrase = phrase.lower()
@@ -168,11 +166,7 @@ class OrTrigger(Trigger):
     def evaluate(self, story):
         return self.T1.evaluate(story) or self.T2.evaluate(story)
 
-#======================
-# Filtering
-#======================
 
-# Problem 10
 def filter_stories(stories, triggerlist):
     """
     Takes in a list of NewsStory instances.
@@ -191,7 +185,7 @@ def filter_stories(stories, triggerlist):
 #======================
 # User-Specified Triggers
 #======================
-# Problem 11
+
 def read_trigger_config(filename):
     """
     filename: the name of a trigger configuration file
