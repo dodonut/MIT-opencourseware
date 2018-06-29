@@ -79,10 +79,6 @@ def greedy_cow_transport(cows,limit=10):
         current_limit = limit
 
     return all_trips
-    
-
-cows = load_cows('ps1_cow_data.txt')  
-print(greedy_cow_transport(cows))
 
 
 # Problem 3
@@ -107,9 +103,19 @@ def brute_force_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    # TODO: Your code here
-    pass
-        
+    min_trip_count = 100000
+    min_trip_list = []
+    for partition in get_partitions(cows.keys()):
+        valid_trip = True
+        for trip in partition:
+            tmp_lim = sum(int(cows[v]) for v in trip)
+            if tmp_lim > limit: valid_trip = False
+        if len(partition) < min_trip_count and valid_trip :
+            min_trip_count = len(partition)
+            min_trip_list = partition
+
+    return min_trip_list
+
 # Problem 4
 def compare_cow_transport_algorithms():
     """
@@ -124,5 +130,25 @@ def compare_cow_transport_algorithms():
     Returns:
     Does not return anything.
     """
-    # TODO: Your code here
-    pass
+    cows = load_cows('ps1_cow_data.txt')
+    start = time.time()
+    print(brute_force_cow_transport(cows))
+    print(time.time() - start)
+    start = time.time()
+    print(greedy_cow_transport(cows))
+    print(time.time() - start)
+
+
+
+# Answers A.5:
+ # 1- The algorithm of the greedy runs faster because it does not test
+ #    every possible combination, instead it goes to an choosen approach which
+ #    may or may not be optimal (not optimal in this case, since it found the best
+ #    solution being 6 trips while the brute force founded 5.)
+ #    While the brute force will give the best possible way to do it (
+ #    because test all ways possible), runs slow in a large set. O(2^n).
+ # 2- It may or may not return it, because it chooses an approach of getting 
+ #    the heaviest first which (depending on data) be the best solution, but
+ #    not true for all cases.
+ # 3- Yes, because it test all solutions possible in a data set and see's 
+ #    what is the best of them.
