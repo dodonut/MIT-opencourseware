@@ -26,12 +26,8 @@ def dp_make_weight(egg_weights, target_weight, memo = {}):
     current_weight = 0
     index = len(egg_weights) -1
     while index >= 0:
-        if current_weight + egg_weights[index] <= target_weight:
-            total_eggs += 1
-            current_weight += egg_weights[index]
-        else:
-            print('here with',egg_weights[index],current_weight)
-            index -= 1
+        total_eggs += target_weight // egg_weights[index]
+        index -= 1
 
     return total_eggs
 
