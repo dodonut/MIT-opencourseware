@@ -48,22 +48,23 @@ def load_map(map_filename):
     _map = Digraph()
     for line in file:
         data_list = line.split(' ')
-        data_list[3] = data_list[3].replace('\n','')
+        data_list[3] = data_list[3].replace('\n', '')
         node_source = Node(data_list[0])
         node_dest = Node(data_list[1])
-        if not _map.has_node(node_source): 
+        if not _map.has_node(node_source):
             _map.add_node(node_source)
-        if not _map.has_node(node_dest): 
+        if not _map.has_node(node_dest):
             _map.add_node(node_dest)
-        distance = WeightedEdge(node_source,node_dest, data_list[2],data_list[3])
+        distance = WeightedEdge(node_source, node_dest,
+                                int(data_list[2]), int(data_list[3]))
         _map.add_edge(distance)
-    
+
     return _map
 
 # Problem 2c: Testing load_map
 # Include the lines used to test load_map below, but comment them out
 
-#print(load_map('simple_map.txt'))
+# print(load_map('simple_map.txt'))
 
 #
 # Problem 3: Finding the Shorest Path using Optimized Search Method
@@ -76,7 +77,9 @@ def load_map(map_filename):
 #
 
 # Problem 3b: Implement get_best_path
-def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
+
+
+def get_best_path(digraph, start, end, path, max_total_dist, max_dist_outdoors, best_dist,
                   best_path):
     """
     Finds the shortest path between buildings subject to constraints.
@@ -110,11 +113,30 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then return None.
     """
-    # TODO
-    pass
+    if not (digraph.has_node(Node(start)) and digraph.has_node(Node(end))):
+        raise ValueError('Nodes not in digraph')
+    elif start == end:
+        path[0] = path[0] + [start]
+        return path
+    else:
+        for edge in digraph.get_edges_for_node(Node(start)):
+            if start not in path[0]:  # avoid cycles
+                if edge.get_total_distance() + path[1] <= max_total_dist and edge.get_outdoor_distance() + path[2] <= max_dist_outdoors:
+                    newPath = path.copy()
+                    newPath[0] = newPath[0] + [start]
+                    newPath[1] += edge.get_total_distance()
+                    newPath[2] += edge.get_outdoor_distance()
+                    if best_path == None or best_dist == -1 or newPath[1] < best_dist:
+                        n = get_best_path(digraph, edge.get_destination().get_name(),
+                                          end, newPath, max_total_dist, max_dist_outdoors, best_dist, best_path)
+                        if n[0] != None:
+                            best_path = n[0]
+                            best_dist = n[1]
+
+    return (best_path, best_dist)
 
 
-# Problem 3c: Implement directed_dfs
+# Problem 3c: Implement directed_dfs j
 def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
     """
     Finds the shortest path from start to end using a directed depth-first
@@ -143,9 +165,10 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then raises a ValueError.
     """
-    # TODO
-    pass
-
+    path = get_best_path(digraph, start, end, [[],0,0],max_total_dist, max_dist_outdoors,-1, None)
+    if path[0] == None:
+        raise ValueError('No path from',start,'to',end)
+    return path[0]
 
 # ================================================================
 # Begin tests -- you do not need to modify anything below this line
@@ -188,7 +211,8 @@ class Ps2Test(unittest.TestCase):
                    outdoor_dist=LARGE_DIST):
         start, end = expectedPath[0], expectedPath[-1]
         self._print_path_description(start, end, total_dist, outdoor_dist)
-        dfsPath = directed_dfs(self.graph, start, end, total_dist, outdoor_dist)
+        dfsPath = directed_dfs(self.graph, start, end,
+                               total_dist, outdoor_dist)
         print("Expected: ", expectedPath)
         print("DFS: ", dfsPath)
         self.assertEqual(expectedPath, dfsPath)
@@ -232,5 +256,6 @@ class Ps2Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    print(load_map('simple_map.txt'))
-    #unittest.main()
+    # dig = load_map('simple_map.txt')
+    # print(directed_dfs(dig, '1','4',3,3))
+    unittest.main()
